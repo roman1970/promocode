@@ -1,6 +1,7 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
+$params_loc = require __DIR__.'/params_loc.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
@@ -15,6 +16,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'ceSp-wuE2qc3avRbvUXf2G3Y8QHU4I6l',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -51,6 +55,34 @@ $config = [
             ],
         ],
         */
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
+            'showScriptName' => false,
+            'rules' => [
+                '<controller:\w+>/<id:\d+>'   => '<controller>/view',
+                '<controller:\w+>/<name:\w+>'   => '<controller>/view',
+                '/<action:\w+>' => 'site/<action>',
+                '<module:\w+>/<controller:\w+>/<id:\d+>'   => '<module>/<controller>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+                '<controller:\w+>/<action:\w+>'   => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<id:\d+>'   => '<controller>/<action>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api',
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>',
+                        '{name}' => '<name:\\w+>',
+                    ],
+                    'pluralize' => false,
+                ],
+
+
+            ],
+
+        ],
     ],
     'params' => $params,
 ];

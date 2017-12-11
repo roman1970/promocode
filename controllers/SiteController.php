@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Promocode;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -61,7 +63,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         return $this->render('index');
+    }
+
+    public function actionShow() {
+        $query = Promocode::find()->orderBy('id DESC');
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $this->render('list', ['codes' => $dataProvider]);
     }
 
     /**
@@ -114,13 +126,93 @@ class SiteController extends Controller
         ]);
     }
 
+
     /**
-     * Displays about page.
-     *
-     * @return string
+     * Создаём код
+     * @return string|Response
      */
-    public function actionAbout()
+    public function actionCreate()
     {
-        return $this->render('about');
+        $model = new Promocode();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $begin_date_arr = explode('/', Yii::$app->request->post()['Promocode']['begin_data']);
+            $end_date_arr = explode('/', Yii::$app->request->post()['Promocode']['end_data']);
+
+            $model->begin_data =
+                mktime(0, 0,0, $begin_date_arr[0], $begin_date_arr[1], $begin_date_arr[2]);
+            $model->end_data =
+                mktime(0, 0,0, $end_date_arr[0], $end_date_arr[1], $end_date_arr[2]);
+            //var_dump($model); exit;
+            try {
+                $model->save(false);
+            } catch (\ErrorException $e) {
+                echo $e->getMessage();
+            }
+            return $this->redirect(Url::toRoute('/show'));
+        }
+
+        else{
+            return $this->render('_form', [
+                'model' => $model,
+                'status' => $model->status
+
+            ]);
+        }
+
     }
+
+    /**
+     * Редактирование
+     * @param $id
+     * @return string|Response
+     */
+    public function actionUpdate($id){
+        $model = $this->loadModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $begin_date_arr = explode('/', Yii::$app->request->post()['Promocode']['begin_data']);
+            $end_date_arr = explode('/', Yii::$app->request->post()['Promocode']['end_data']);
+
+            $model->begin_data =
+                mktime(0, 0,0, $begin_date_arr[0], $begin_date_arr[1], $begin_date_arr[2]);
+            $model->end_data =
+                mktime(0, 0,0, $end_date_arr[0], $end_date_arr[1], $end_date_arr[2]);
+            //var_dump($model); exit;
+            try {
+                $model->save(false);
+            } catch (\ErrorException $e) {
+                echo $e->getMessage();
+            }
+            return $this->redirect(Url::toRoute('/show'));
+        }
+
+        else{
+            $model->begin_data = date('m/d/Y', $model->begin_data);
+            $model->end_data = date('m/d/Y', $model->end_data);
+            return $this->render('_form', [
+                'model' => $model,
+                'status' => $model->status
+            ]);
+        }
+    }
+
+    /**
+     * Модель
+     * @param $id
+     * @return null|static
+     * @throws \yii\web\HttpException
+     */
+    public function loadModel($id)
+    {
+
+        $model = Promocode::findOne($id);
+
+        if ($model === null)
+            throw new \yii\web\HttpException(404, 'The requested page does not exist.');
+        return $model;
+    }
+
+
 }
