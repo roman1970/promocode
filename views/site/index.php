@@ -14,7 +14,7 @@ $this->title = 'Приложение Промокод';
         <p><a class="btn btn-default" href="show">Просмотр и редактирование</a></p>
         <h2>4-5. API</h2>
         <p><a class="btn btn-default" href="http://servyz.xyz:8091/v1/promo">API все коды</a></p>
-        <p><a class="btn btn-default" href="http://servyz.xyz:8091/v1/promo/get-discount-info?name=prom&fields=tar_zone,reward,begin_data,end_data,status">
+        <p><a class="btn btn-default" href="http://servyz.xyz:8091/v1/promo/get-discount-info?name=prom">
                 API вызов метода get_discount_info с параметром name=good_promo</a></p>
         <p><a class="btn btn-default" href="http://servyz.xyz:8091/v1/promo/activate-discount?name=prom&tar_zone=1">
                 API вызов метода activate_discount с параметрами name=promocode_12&tar_zone=1</a></p>
