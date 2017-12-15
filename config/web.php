@@ -69,7 +69,7 @@ $config = [
                 '<controller:\w+>/<action:\w+>'   => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>/<id:\d+>'   => '<controller>/<action>',
                 '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
-                [
+                /*[
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api',
                     'tokens' => [
@@ -78,6 +78,7 @@ $config = [
                     ],
                     'pluralize' => false,
                 ],
+                */
 
 
             ],
